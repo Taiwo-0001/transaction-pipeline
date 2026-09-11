@@ -1,18 +1,41 @@
-# Transaction Data Processing Pipeline
 
-## Overview
+## How to Run the Project
 
-This project implements a Python-based transaction data processing pipeline. It reads transaction data from CSV files, validates and cleans the records, separates valid and invalid transactions, calculates financial summaries, and provides the processed data through a REST API built with Flask.
+First, open the project folder in VS Code.
 
-The pipeline is designed to handle both clean and messy transaction datasets.
+Open the terminal and activate the virtual environment using:
+venv\Scripts\activate
 
----
+
+Install the required packages:
+
+
+Run the data pipeline using:
+
+python pipeline/processor.py
+
+This will read the CSV file, clean the data and create and update the output.json file.
+
+To run the API use:
+
+python app.py
+
+
+
+To run the tests, open another terminal and run:
+
+pytest
+
+
+The tests should show:
+
+5 passed
+
 
 ## Project Structure
 
-```text
-transaction-pipeline/
 
+transaction-pipeline/
 │
 ├── data/
 │   ├── clean_transactions.csv
@@ -27,326 +50,156 @@ transaction-pipeline/
 │
 ├── app.py
 ├── output.json
-├── README.md
 ├── requirements.txt
-└── .gitignore
-```
+└── README.md
 
----
 
-## Technologies Used
-
-* Python
-* Flask
-* CSV
-* JSON
-* Regular Expressions
-* Decimal
-* Pytest
-
----
-
-## Features
-
-The pipeline performs the following tasks:
-
-* Reads transaction data from CSV files.
-* Validates required transaction fields.
-* Cleans unnecessary whitespace.
-* Converts different date formats to `YYYY-MM-DD`.
-* Removes currency symbols and commas from monetary values.
-* Validates transaction amounts.
-* Validates transaction types.
-* Detects invalid transactions.
-* Detects duplicate transaction IDs.
-* Calculates total income.
-* Calculates total expenses.
-* Calculates account balance.
-* Groups expenses by category.
-* Provides transaction data through REST API endpoints.
-
----
-
-## Data Validation and Cleaning Rules
+## Data Validation Rules
 
 The following fields are required:
 
-* ID
-* Date
-* Description
-* Amount
-* Type
-* Category
+* id
+* date
+* description
+* amount
+* type
+* category
 
-### Date
+The validation rules I used are:
 
-The pipeline accepts:
+1. The transaction must have an ID.
+2. The description cannot be empty.
+3. The category cannot be empty.
+4. The date must be in a valid format.
+5. The amount must be a number.
+6. The amount must be greater than zero.
+7. The type must be either income or expense.
+8. Duplicate transaction IDs are rejected.
 
-```text
-YYYY-MM-DD
-DD/MM/YYYY
-```
+## How I Handled Bad Data
 
-Dates are converted to:
+When a transaction is not valid, I do not include it in the calculations.
 
-```text
-YYYY-MM-DD
-```
+Instead, I put it inside invalidTransactions and save the reason why it was rejected.
 
-### Amount
+For example, if the amount is abc, the transaction is rejected because the amount is not a number.
 
-The pipeline removes:
+This helps me know which records were bad and why they were not used.
 
-* Currency symbols such as `₦`, `$`, `€`, and `£`
-* Commas
-* Extra spaces
 
-For example:
-
-```text
-₦25,000
-```
-
-is converted to:
-
-```text
-25000
-```
-
-Amounts must be numeric, positive, finite, and expressed as whole naira values.
-
-### Transaction Type
-
-Only the following transaction types are accepted:
-
-```text
-income
-expense
-```
-
-Transaction types are converted to lowercase before validation.
-
-### Invalid Transactions
-
-A transaction is rejected if it contains issues such as:
-
-* Missing transaction ID
-* Missing description
-* Missing category
-* Invalid date
-* Invalid amount
-* Negative or zero amount
-* Invalid transaction type
-* Duplicate transaction ID
-
-Invalid records are preserved in the output together with the reason they were rejected.
-
----
-
-## Running the Data Pipeline
-
-Make sure the virtual environment is activated.
-
-Run:
-
-```bash
-python pipeline/processor.py
-```
-
-The processed result is displayed in the terminal and saved to:
-
-```text
-output.json
-```
-
----
 
 ## Clean Dataset Result
 
-When the supplied clean dataset is processed, the pipeline produces:
+For the clean dataset, the program gives:
 
-```json
-{
-  "totalIncome": 220000,
-  "totalExpenses": 30000,
-  "balance": 190000,
-  "numberOfTransactions": 8
-}
-```
 
-### Note on the Expected Result
+Total income: ₦220,000
+Total expenses: ₦30,000
+Balance: ₦190,000
+Number of transactions: 8
 
-There is a discrepancy between the expected result stated in the assignment and the actual values contained in the supplied clean dataset.
 
-The assignment states an expected total expense of:
+There is a small difference between this result and the expected result stated in the test.
 
-```text
-₦30,500
-```
+The test says the total expenses should be ₦30,500 and the balance should be ₦189,500.
 
-and an expected balance of:
+However, when I checked the actual clean CSV file, the expense values add up to ₦30,000.
 
-```text
-₦189,500
-```
-
-However, the four expense records in the supplied clean dataset are:
-
-```text
-₦5,000
-₦4,500
-₦12,000
-₦8,500
-```
-
-These add up to:
-
-```text
-₦30,000
-```
-
-Therefore, based on the actual data provided, the correct calculated balance is:
-
-```text
-₦220,000 - ₦30,000 = ₦190,000
-```
-
-The pipeline therefore reports **₦30,000 total expenses and ₦190,000 balance** rather than the assignment's stated ₦30,500 and ₦189,500.
-
-The code was not modified to artificially produce the stated expected result because doing so would make the calculation inconsistent with the supplied dataset.
-
----
+Therefore, I used the result from the actual data instead of changing the code to give the expected result.
 
 ## Messy Dataset Result
 
-The messy dataset is also processed by the same validation and cleaning pipeline.
+After cleaning the messy dataset, the result is:
 
-The resulting summary is:
+Total income: ₦220,000
+Total expenses: ₦9,500
+Balance: ₦210,500
+Number of valid transactions: 6
 
-```json
-{
-  "totalIncome": 220000,
-  "totalExpenses": 9500,
-  "balance": 210500,
-  "numberOfTransactions": 6
-}
-```
 
-Six transactions are accepted as valid, while **seven transactions are rejected** because of validation errors.
+There were also 7 invalid transactions.
 
----
+Some of the reasons were:
 
-## REST API
+* Missing description
+* Invalid date
+* Missing category
+* Amount is zero
+* Amount is not a number
+* Invalid transaction type
 
-The project includes a Flask REST API.
+## API
 
-Start the API with:
+I used Flask to create the API.
 
-```bash
-python app.py
-```
+The API has these endpoints:
 
-The API runs locally at:
+### Get all transactions
 
-```text
-http://127.0.0.1:5000
-```
-
-### Get All Transactions
-
-```http
 GET /transactions
-```
 
-Example:
 
-```text
-http://127.0.0.1:5000/transactions
-```
+This returns all the valid transactions.
 
-Returns all valid transactions.
+### Get one transaction
 
-### Get Transaction by ID
+GET /transactions/txn_101
+This returns the transaction with that ID.
 
-```http
-GET /transactions/<id>
-```
+If the transaction does not exist, the API returns `404`.
 
-Example:
+### Get summary
 
-```text
-http://127.0.0.1:5000/transactions/txn_101
-```
 
-If the transaction does not exist, the API returns a `404` response.
-
-### Get Summary
-
-```http
 GET /analytics/summary
-```
 
-Example:
 
-```text
-http://127.0.0.1:5000/analytics/summary
-```
+This gives the total income, total expenses, balance and number of transactions.
 
-Returns:
+### Get expenses by category
 
-* Total income
-* Total expenses
-* Balance
-* Number of valid transactions
 
-### Get Expenses by Category
-
-```http
 GET /analytics/categories
-```
 
-Example:
 
-```text
-http://127.0.0.1:5000/analytics/categories
-```
-
-Returns total expenses grouped by category.
-
----
-
-## Installation
-
-Clone or download the project and navigate to the project directory.
-
-Create a virtual environment:
-
-```bash
-python -m venv venv
-```
-
-Activate it on Windows:
-
-```bash
-venv\Scripts\activate
-```
-
-Install the required dependencies:
-
-```bash
-pip install -r requirements.txt
-```
-
----
+This shows how much was spent under each expense category.
 
 ## Testing
 
-Automated tests are included in the `tests` directory.
+I used Pytest to test some important parts of the program.
 
-Run the tests using:
+The tests check things like:
 
-```bash
+* Amount cleaning
+* Date conversion
+* Clean data results
+* Messy data results
+* Invalid transactions
+
+I ran:
+
 pytest
-```
 
-The tests verify important pipeline functions including data validation, amount parsing, date parsing, and tr
+
+The result was:
+
+5 passed
+
+
+## Assumptions
+
+Some assumptions I made are:
+
+* Every transaction should have a unique ID.
+* Amounts are in Nigerian naira.
+* Amounts must be greater than zero.
+* A transaction must have a category.
+* Only income and expense are accepted as transaction types.
+* The accepted date formats are YYYY-MM-DD and DD/MM/YYYY.
+
+## What I Would Improve
+
+If I had more time, I would improve the project by:
+
+* Adding more tests
+* Adding better error messages
