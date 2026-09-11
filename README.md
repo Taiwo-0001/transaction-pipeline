@@ -34,24 +34,15 @@ The tests should show:
 
 ## Project Structure
 
+There are different files and folders in the project.
 
-transaction-pipeline/
-│
-├── data/
-│   ├── clean_transactions.csv
-│   └── messy_transactions.csv
-│
-├── pipeline/
-│   ├── __init__.py
-│   └── processor.py
-│
-├── tests/
-│   └── test_processor.py
-│
-├── app.py
-├── output.json
-├── requirements.txt
-└── README.md
+- **data:** contains the transaction CSV files.
+- **pipeline:** contains the main data processing code.
+- **tests:** contains the test file.
+- **app.py:** runs the Flask API.
+- **output.json:** stores the output from the pipeline.
+- **requirements.txt:** lists the required packages.
+- **README.md:** explains the project.
 
 
 ## Data Validation Rules
