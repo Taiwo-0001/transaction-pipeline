@@ -1,0 +1,156 @@
+{
+  "summary": {
+    "totalIncome": 220000,
+    "totalExpenses": 9500,
+    "balance": 210500,
+    "numberOfTransactions": 6
+  },
+  "expensesByCategory": {
+    "Marketing": 5000,
+    "Transport": 4500
+  },
+  "transactions": [
+    {
+      "id": "txn_101",
+      "date": "2026-09-01",
+      "description": "Instagram Sale",
+      "amount": 25000,
+      "type": "income",
+      "category": "Sales"
+    },
+    {
+      "id": "txn_102",
+      "date": "2026-09-01",
+      "description": "Facebook Ads",
+      "amount": 5000,
+      "type": "expense",
+      "category": "Marketing"
+    },
+    {
+      "id": "txn_103",
+      "date": "2026-09-03",
+      "description": "Client Payment",
+      "amount": 85000,
+      "type": "income",
+      "category": "Services"
+    },
+    {
+      "id": "txn_104",
+      "date": "2026-09-04",
+      "description": "Uber",
+      "amount": 4500,
+      "type": "expense",
+      "category": "Transport"
+    },
+    {
+      "id": "txn_106",
+      "date": "2026-09-06",
+      "description": "Online Store Sale",
+      "amount": 45000,
+      "type": "income",
+      "category": "Sales"
+    },
+    {
+      "id": "txn_109",
+      "date": "2026-09-08",
+      "description": "Consulting Payment",
+      "amount": 65000,
+      "type": "income",
+      "category": "Services"
+    }
+  ],
+  "invalidTransactions": [
+    {
+      "row": 6,
+      "id": "txn_105",
+      "reason": "Missing description",
+      "data": {
+        "id": "txn_105",
+        "date": "2026-09-05",
+        "description": "",
+        "amount": "12000",
+        "type": "expense",
+        "category": "Operations"
+      }
+    },
+    {
+      "row": 8,
+      "id": "txn_107",
+      "reason": "Invalid date format",
+      "data": {
+        "id": "txn_107",
+        "date": "invalid-date",
+        "description": "Internet Subscription",
+        "amount": "8500",
+        "type": "expense",
+        "category": "Utilities"
+      }
+    },
+    {
+      "row": 9,
+      "id": "txn_108",
+      "reason": "Missing category",
+      "data": {
+        "id": "txn_108",
+        "date": "2026-09-08",
+        "description": "Consulting Payment",
+        "amount": "65000",
+        "type": "income",
+        "category": ""
+      }
+    },
+    {
+      "row": 10,
+      "id": "txn_109",
+      "reason": "Missing category",
+      "data": {
+        "id": "txn_109",
+        "date": "2026-09-08",
+        "description": "Consulting Payment",
+        "amount": "65000",
+        "type": "income",
+        "category": ""
+      }
+    },
+    {
+      "row": 12,
+      "id": "txn_110",
+      "reason": "Amount must be greater than zero",
+      "data": {
+        "id": "txn_110",
+        "date": "2026-09-09",
+        "description": "Unknown Transaction",
+        "amount": "-5000",
+        "type": "expense",
+        "category": "Other"
+      }
+    },
+    {
+      "row": 13,
+      "id": "txn_111",
+      "reason": "Amount must be numeric",
+      "data": {
+        "id": "txn_111",
+        "date": "2026-09-09",
+        "description": "Random Payment",
+        "amount": "abc",
+        "type": "income",
+        "category": "Sales"
+      }
+    },
+    {
+      "row": 14,
+      "id": "txn_112",
+      "reason": "Type must be income or expense",
+      "data": {
+        "id": "txn_112",
+        "date": "2026-09-09",
+        "description": "Refund",
+        "amount": "15000",
+        "type": "refund",
+        "category": "Sales"
+      }
+    }
+  ],
+  "transactionsProcessed": 6
+}
